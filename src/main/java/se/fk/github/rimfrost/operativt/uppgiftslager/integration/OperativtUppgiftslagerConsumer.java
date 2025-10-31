@@ -26,7 +26,8 @@ public class OperativtUppgiftslagerConsumer
 
    @Incoming("operativt-uppgiftslager-requests")
    @Blocking
-   public void handleIncomingTask(OperativtUppgiftslagerRequest operativtUppgiftslagerRequest) {
+   public void handleIncomingTask(OperativtUppgiftslagerRequest operativtUppgiftslagerRequest)
+   {
       log.info("Received task for operativt uppgiftslager: {}", operativtUppgiftslagerRequest);
       // Logik för att lägga till en uppgift till uppgiftslagret
       // Skicka även ett slags meddelande när den är ny

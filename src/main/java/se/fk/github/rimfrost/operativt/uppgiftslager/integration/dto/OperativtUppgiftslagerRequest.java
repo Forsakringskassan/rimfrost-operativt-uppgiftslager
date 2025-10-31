@@ -14,5 +14,5 @@ public interface OperativtUppgiftslagerRequest
    // TODO: Enum för uppgiftstyper eller liknande, identitet?
    // Beskriver vad uppgiften går ut på
    String uppgift();
-   
+
 }

@@ -5,15 +5,15 @@ import java.util.UUID;
 import org.immutables.value.Value;
 
 @Value.Immutable
-public interface OperativtUppgiftsLagerUppdatering 
+public interface OperativtUppgiftsLagerUppdatering
 {
-    UUID processId();
+   UUID processId();
 
-    // TODO: Räcker processId för att koppla till rätt uppgift?
-    String personNummer();
+   // TODO: Räcker processId för att koppla till rätt uppgift?
+   String personNummer();
 
-    // TODO: Tänk igenom om denna verkligen behövs, eller om status räcker
-    String uppgift();
+   // TODO: Tänk igenom om denna verkligen behövs, eller om status räcker
+   String uppgift();
 
-    String status();
+   String status();
 }

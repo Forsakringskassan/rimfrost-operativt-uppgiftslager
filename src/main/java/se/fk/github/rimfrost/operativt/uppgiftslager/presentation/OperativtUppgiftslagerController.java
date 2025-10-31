@@ -10,27 +10,38 @@ import jakarta.ws.rs.Path;
 import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
 import se.fk.github.rimfrost.operativt.uppgiftslager.logic.OperativtUppgiftslagerService;
-
+import se.fk.github.rimfrost.operativt.uppgiftslager.presentation.dto.UppgiftNextResponse;
+import se.fk.github.rimfrost.operativt.uppgiftslager.presentation.dto.UppgiftStatusUpdateRequest;
+import se.fk.github.rimfrost.operativt.uppgiftslager.presentation.dto.UppgiftStatusUpdateResponse;
 
 @Produces("application/json")
 @Consumes("application/json")
 @ApplicationScoped
 @Path("/uppgifter")
-public class OperativtUppgiftslagerController {
-  @Inject OperativtUppgiftslagerService service;
-//   @Inject PresentationMapper mapper;
+public class OperativtUppgiftslagerController
+{
+   @Inject
+   OperativtUppgiftslagerService service;
+   //   @Inject PresentationMapper mapper;
 
-  @POST @Path("/{handlaggar_id}/next")
-  @Transactional
-  public UppgiftNextResponse next(@PathParam("handlaggar_id") String id) {
-    var task = service.reserveNextFor(id);
-    return mapper.toNextResponse(task);
-  }
+   @POST
+   @Path("/{handlaggar_id}/next")
+   @Transactional
+   public UppgiftNextResponse next(@PathParam("handlaggar_id") String id)
+   {
+    //   var task = service.reserveNextFor(id);
+    //   return mapper.toNextResponse(task);
+        return null;
+   }
 
-  @PATCH @Path("/{uppgift_id}")
-  @Transactional
-  public UppgiftRestDTO update(@PathParam("uppgift_id") String id, UppgiftStatusUpdateRequest body) {
-    var updated = service.updateStatus(id, mapper.toDomainStatus(body.getStatus()));
-    return mapper.toApiUppgift(updated);
-  }
+   @PATCH
+   @Path("/{uppgift_id}")
+   @Transactional
+   public UppgiftStatusUpdateResponse update(@PathParam("uppgift_id") String id, UppgiftStatusUpdateRequest body)
+   {
+    // Använd den id man får från path och sedan status från body för att uppdatera i OperativUppgitslagerService
+    //   var updated = service.updateStatus(id, mapper.toDomainStatus(body.getStatus()));
+    //   return mapper.toApiUppgift(updated);
+        return null;
+   }
 }
