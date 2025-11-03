@@ -21,7 +21,7 @@ import se.fk.github.rimfrost.operativt.uppgiftslager.presentation.dto.UppgiftSta
 public class OperativtUppgiftslagerController
 {
    @Inject
-   OperativtUppgiftslagerService service;
+   OperativtUppgiftslagerService operativtUppgiftslagerService;
    //   @Inject PresentationMapper mapper;
 
    @POST

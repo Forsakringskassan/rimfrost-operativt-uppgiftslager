@@ -2,14 +2,9 @@ package se.fk.github.rimfrost.operativt.uppgiftslager.integration;
 
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
-import jakarta.ws.rs.Path;
 import se.fk.github.rimfrost.operativt.uppgiftslager.logic.OperativtUppgiftslagerService;
-import se.fk.github.rimfrost.operativt.uppgiftslager.integration.dto.OperativtUppgiftsLagerUppdatering;
 import se.fk.github.rimfrost.operativt.uppgiftslager.integration.dto.OperativtUppgiftslagerRequest;
-import se.fk.github.rimfrost.operativt.uppgiftslager.integration.dto.OperativtUppgiftslagerResponse;
 
-import org.eclipse.microprofile.reactive.messaging.Channel;
-import org.eclipse.microprofile.reactive.messaging.Emitter;
 import org.eclipse.microprofile.reactive.messaging.Incoming;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
