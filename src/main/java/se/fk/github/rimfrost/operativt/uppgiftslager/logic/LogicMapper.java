@@ -1,64 +1,23 @@
 package se.fk.github.rimfrost.operativt.uppgiftslager.logic;
 
-import java.time.OffsetDateTime;
-
 import jakarta.enterprise.context.ApplicationScoped;
-import se.fk.github.rimfrost.operativt.uppgiftslager.logic.dto.ImmutableOperativtUppgiftslagerUpdateResponse;
-import se.fk.github.rimfrost.operativt.uppgiftslager.logic.dto.OperativtUppgiftslagerUpdateResponse;
-import se.fk.github.rimfrost.operativt.uppgiftslager.logic.entity.RequestMetadataEntity;
 import se.fk.github.rimfrost.operativt.uppgiftslager.logic.entity.UppgiftEntity;
 import se.fk.github.rimfrost.operativt.uppgiftslager.logic.enums.UppgiftStatus;
-import se.fk.rimfrost.BeslutUtfall;
-import se.fk.rimfrost.KogitoProcType;
-import se.fk.rimfrost.OperativtUppgiftslagerResponseMessageData;
-import se.fk.rimfrost.OperativtUppgiftslagerResponseMessagePayload;
-import se.fk.rimfrost.SpecVersion;
-import se.fk.rimfrost.Status;
+import se.fk.rimfrost.*;
 
 @ApplicationScoped
 public class LogicMapper
 {
 
-   public OperativtUppgiftslagerResponseMessageData toOperativtUppgiftslagerResponseData(UppgiftEntity uppgift)
+   public OperativtUppgiftslagerStatusMessagePayload toOperativtUppgiftslagerStatusMessagePayload(UppgiftEntity uppgift)
    {
-      var data = new OperativtUppgiftslagerResponseMessageData();
-      data.setBeslutUtfall(BeslutUtfall.BEVILJAT); //TODO should be part of uppgift.beslut()
-      data.setPersonnummer(uppgift.personnummer());
-      data.setProcessId(uppgift.processId().toString());
+      var data = new OperativtUppgiftslagerStatusMessagePayload();
       data.setStatus(mapStatus(uppgift.status()));
+      data.setUppgiftId(uppgift.uppgiftId().toString());
+      data.setProcessId(uppgift.processId().toString());
+      if (uppgift.personnummer() != null)
+         data.setPersonnummer(uppgift.personnummer());
       return data;
-   }
-
-   public OperativtUppgiftslagerUpdateResponse toOperativtUppgiftslagerUpdateResponse(UppgiftEntity uppgift)
-   {
-      return ImmutableOperativtUppgiftslagerUpdateResponse.builder()
-            .beskrivning(uppgift.beskrivning())
-            .handlaggarId(uppgift.handlaggarId())
-            .status(uppgift.status().name())
-            .uppgiftId(uppgift.uppgiftId())
-            .build();
-   }
-
-   public OperativtUppgiftslagerResponseMessagePayload toOperativtUppgiftslagerResponsePayload(RequestMetadataEntity metadata,
-         OperativtUppgiftslagerResponseMessageData responseData)
-   {
-      var payload = new OperativtUppgiftslagerResponseMessagePayload();
-      payload.setData(responseData);
-      payload.setSpecversion(SpecVersion.NUMBER_1_DOT_0);
-      payload.setId(metadata.id().toString());
-      payload.setSource(metadata.source());
-      payload.setTime(OffsetDateTime.now());
-      payload.setType("operativt-uppgiftslager-responses");
-      payload.setKogitoparentprociid(metadata.kogitoparentprociid().toString());
-      payload.setKogitoprocid(metadata.kogitoprocid());
-      payload.setKogitoprocinstanceid(metadata.kogitoprocinstanceid().toString());
-      payload.setKogitoprocist(metadata.kogitoprocist());
-      payload.setKogitoprocrefid(metadata.kogitoprocinstanceid().toString());
-      payload.setKogitoproctype(KogitoProcType.BPMN);
-      payload.setKogitoprocversion(metadata.kogitoprocversion());
-      payload.setKogitorootprocid(metadata.kogitorootprocid());
-      payload.setKogitorootprociid(metadata.kogitorootprociid().toString());
-      return payload;
    }
 
    public Status mapStatus(UppgiftStatus status)

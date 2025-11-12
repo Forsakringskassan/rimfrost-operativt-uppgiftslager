@@ -38,7 +38,7 @@ public class OperativtUppgiftslagerService
       var uppgift = ImmutableUppgiftEntity.builder()
             .personnummer(addRequest.personNummer())
             .processId(addRequest.processId())
-            .beskrivning(addRequest.uppgift())
+            .beskrivning(addRequest.uppgiftSpecId())
             .status(UppgiftStatus.NY)
             .uppgiftId(idCounter.incrementAndGet())
             .handlaggarId("")
@@ -62,6 +62,7 @@ public class OperativtUppgiftslagerService
 
       taskMap.put(uppgift.uppgiftId(), uppgift);
       metadataMap.put(uppgift.processId(), metadata);
+      producer.publishTaskResponse(logicMapper.toOperativtUppgiftslagerStatusMessagePayload(uppgift));
       log.info("Added new task");
    }
 
@@ -105,6 +106,8 @@ public class OperativtUppgiftslagerService
 
    public UppgiftEntity updateOperativeTask(Long uppgiftId, UppgiftStatus newStatus)
    {
+      log.info("Updating task with ID: {}, Status: {}", uppgiftId, newStatus);
+
       var uppgift = taskMap.get(uppgiftId);
 
       if (uppgift == null)
@@ -117,19 +120,16 @@ public class OperativtUppgiftslagerService
 
       taskMap.put(uppgiftId, updatedUppgift);
 
-      if (newStatus == UppgiftStatus.AVSLUTAD)
-      {
-         notifyTaskCompleted(updatedUppgift);
-      }
+      notifyTaskUpdate(updatedUppgift);
+
+      log.info("Updated task with ID: {}, Status: {}", uppgiftId, newStatus);
 
       return updatedUppgift;
    }
 
-   public void notifyTaskCompleted(UppgiftEntity uppgift)
+   public void notifyTaskUpdate(UppgiftEntity uppgift)
    {
-      var metadata = metadataMap.get(uppgift.processId());
-      var responseData = logicMapper.toOperativtUppgiftslagerResponseData(uppgift);
-      var responsePayload = logicMapper.toOperativtUppgiftslagerResponsePayload(metadata, responseData);
+      var responsePayload = logicMapper.toOperativtUppgiftslagerStatusMessagePayload(uppgift);
       producer.publishTaskResponse(responsePayload);
    }
 

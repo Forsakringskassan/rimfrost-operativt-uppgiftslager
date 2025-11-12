@@ -6,7 +6,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import jakarta.enterprise.context.ApplicationScoped;
-import se.fk.rimfrost.OperativtUppgiftslagerResponseMessagePayload;
+import se.fk.rimfrost.OperativtUppgiftslagerStatusMessagePayload;
 
 @ApplicationScoped
 public class OperativtUppgiftslagerProducer
@@ -14,9 +14,9 @@ public class OperativtUppgiftslagerProducer
    private static final Logger log = LoggerFactory.getLogger(OperativtUppgiftslagerProducer.class);
 
    @Channel("operativt-uppgiftslager-responses")
-   Emitter<OperativtUppgiftslagerResponseMessagePayload> emitter;
+   Emitter<OperativtUppgiftslagerStatusMessagePayload> emitter;
 
-   public void publishTaskResponse(OperativtUppgiftslagerResponseMessagePayload response)
+   public void publishTaskResponse(OperativtUppgiftslagerStatusMessagePayload response)
    {
       log.info("Publishing task response for operativt uppgiftslager: {}", response);
       emitter.send(response);
