@@ -169,7 +169,8 @@ public class OperativtUppgiftslagerService
             .status(request.status())
             .build();
       taskMap.put(task.uppgiftId(), avslutadTask);
-      notifyTaskUpdate(avslutadTask);
+      var responsePayload = logicMapper.toOperativtUppgiftslagerStatusMessagePayload(avslutadTask);
+      producer.publishTaskAvslut(responsePayload);
       log.info("Task {} avslutad", avslutadTask.uppgiftId());
    }
 }
