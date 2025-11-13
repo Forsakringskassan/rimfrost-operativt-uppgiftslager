@@ -12,6 +12,6 @@ public interface OperativtUppgiftslagerAddRequest
 
    String personNummer();
 
-   String uppgift();
+   String uppgiftSpecId();
 
 }

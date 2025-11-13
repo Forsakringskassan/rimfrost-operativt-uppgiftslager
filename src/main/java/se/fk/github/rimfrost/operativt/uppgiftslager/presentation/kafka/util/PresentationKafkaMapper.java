@@ -18,9 +18,9 @@ public class PresentationKafkaMapper
          OperativtUppgiftslagerRequestMessageData operativtUppgiftslagerRequestData)
    {
       return ImmutableOperativtUppgiftslagerAddRequest.builder()
-            .personNummer(operativtUppgiftslagerRequestData.getPersonNummer())
+            .personNummer(operativtUppgiftslagerRequestData.getPersonnummer())
             .processId(UUID.fromString(operativtUppgiftslagerRequestData.getProcessId()))
-            .uppgift(operativtUppgiftslagerRequestData.getUppgiftsBeskrivning())
+            .uppgiftSpecId(operativtUppgiftslagerRequestData.getUppgiftspecId())
             .build();
    }
 
