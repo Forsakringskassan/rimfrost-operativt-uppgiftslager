@@ -24,12 +24,12 @@ public class OperativtUppgiftslagerProducer
    }
 
    @Channel("operativt-uppgiftslager-status-notification")
-   Emitter<OperativtUppgiftslagerStatusMessagePayload> avslutEmitter;
+   Emitter<OperativtUppgiftslagerStatusMessagePayload> statusUpdateEmitter;
 
-   public void publishTaskAvslut(OperativtUppgiftslagerStatusMessagePayload response)
+   public void publishTaskStatusUpdate(OperativtUppgiftslagerStatusMessagePayload response)
    {
-      log.info("Publishing task Avslut: {}", response);
-      avslutEmitter.send(response);
-      log.info("Published task Avslut: {}", response);
+      log.info("Publishing task StatusUpdate: {}", response);
+      statusUpdateEmitter.send(response);
+      log.info("Published task StatusUpdate: {}", response);
    }
 }

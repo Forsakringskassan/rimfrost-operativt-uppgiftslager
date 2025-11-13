@@ -4,15 +4,14 @@ import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicLong;
 
-import org.jboss.resteasy.reactive.common.NotImplementedYet;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import se.fk.github.rimfrost.operativt.uppgiftslager.integration.kafka.OperativtUppgiftslagerProducer;
 import se.fk.github.rimfrost.operativt.uppgiftslager.logic.dto.OperativtUppgiftslagerAddRequest;
-import se.fk.github.rimfrost.operativt.uppgiftslager.logic.dto.OperativtUppgiftslagerAvslutRequest;
 import se.fk.github.rimfrost.operativt.uppgiftslager.logic.dto.OperativtUppgiftslagerRequestMetadata;
+import se.fk.github.rimfrost.operativt.uppgiftslager.logic.dto.OperativtUppgiftslagerUpdateRequest;
 import se.fk.github.rimfrost.operativt.uppgiftslager.logic.entity.ImmutableUppgiftEntity;
 import se.fk.github.rimfrost.operativt.uppgiftslager.logic.entity.UppgiftEntity;
 import se.fk.github.rimfrost.operativt.uppgiftslager.logic.entity.RequestMetadataEntity;
@@ -160,17 +159,17 @@ public class OperativtUppgiftslagerService
       return null;
    }
 
-   public void onTaskAvslutad(OperativtUppgiftslagerAvslutRequest request)
+   public void onTaskStatusUpdated(OperativtUppgiftslagerUpdateRequest request)
    {
-      log.info("Avslutar task {}", request.uppgiftId());
-      var task = taskMap.get(Long.parseLong(request.uppgiftId()));
-      var avslutadTask = ImmutableUppgiftEntity.builder()
+      log.info("StatusUpdating task {}", request.uppgiftId());
+      var task = taskMap.get(Long.parseLong(request.uppgiftId().toString()));
+      var updatedTask = ImmutableUppgiftEntity.builder()
             .from(task)
             .status(request.status())
             .build();
-      taskMap.put(task.uppgiftId(), avslutadTask);
-      var responsePayload = logicMapper.toOperativtUppgiftslagerStatusMessagePayload(avslutadTask);
-      producer.publishTaskAvslut(responsePayload);
-      log.info("Task {} avslutad", avslutadTask.uppgiftId());
+      taskMap.put(task.uppgiftId(), updatedTask);
+      var responsePayload = logicMapper.toOperativtUppgiftslagerStatusMessagePayload(updatedTask);
+      producer.publishTaskStatusUpdate(responsePayload);
+      log.info("Task StatusUpdate finished on {}", updatedTask.uppgiftId());
    }
 }

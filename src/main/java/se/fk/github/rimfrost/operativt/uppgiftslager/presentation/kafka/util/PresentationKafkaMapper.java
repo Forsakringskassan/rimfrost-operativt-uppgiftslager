@@ -5,7 +5,6 @@ import java.util.UUID;
 
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
-import org.jboss.resteasy.reactive.common.NotImplementedYet;
 import se.fk.github.rimfrost.operativt.uppgiftslager.logic.dto.*;
 import se.fk.github.rimfrost.operativt.uppgiftslager.util.EnumMapper;
 import se.fk.rimfrost.OperativtUppgiftslagerRequestMessageData;
@@ -28,11 +27,11 @@ public class PresentationKafkaMapper
             .build();
    }
 
-   public OperativtUppgiftslagerAvslutRequest mapToLogicOulStatusMessage(
+   public OperativtUppgiftslagerUpdateRequest mapToLogicOulStatusMessage(
          OperativtUppgiftslagerStatusMessagePayload operativtUppgiftslagerStatusMessagePayload)
    {
-      return ImmutableOperativtUppgiftslagerAvslutRequest.builder()
-            .uppgiftId(operativtUppgiftslagerStatusMessagePayload.getUppgiftId())
+      return ImmutableOperativtUppgiftslagerUpdateRequest.builder()
+            .uppgiftId(UUID.fromString(operativtUppgiftslagerStatusMessagePayload.getUppgiftId()))
             .processId(operativtUppgiftslagerStatusMessagePayload.getProcessId())
             .status(enumMapper.mapStatusToUppgiftStatus(operativtUppgiftslagerStatusMessagePayload.getStatus()))
             .personnummer(operativtUppgiftslagerStatusMessagePayload.getPersonnummer())

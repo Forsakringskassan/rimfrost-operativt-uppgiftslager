@@ -2,7 +2,6 @@ package se.fk.github.rimfrost.operativt.uppgiftslager.presentation.kafka;
 
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
-import org.jboss.resteasy.reactive.common.NotImplementedYet;
 import se.fk.github.rimfrost.operativt.uppgiftslager.logic.OperativtUppgiftslagerService;
 import se.fk.github.rimfrost.operativt.uppgiftslager.presentation.kafka.util.PresentationKafkaMapper;
 import se.fk.rimfrost.OperativtUppgiftslagerRequestMessagePayload;
@@ -46,14 +45,14 @@ public class OperativtUppgiftslagerConsumer
 
    @Incoming("operativt-uppgiftslager-status-control")
    @Blocking
-   public void onOperativeUppgiftsLagerUpdate(
+   public void onOperativeUppgiftsLagerStatusUpdate(
          OperativtUppgiftslagerStatusMessagePayload operativtUppgiftslagerStatusMessage)
    {
-      log.info("Received task for Avslut: {}", operativtUppgiftslagerStatusMessage);
+      log.info("Received task for StatusUpdate: {}", operativtUppgiftslagerStatusMessage);
 
-      var oulAvslutRequest = mapper.mapToLogicOulStatusMessage(operativtUppgiftslagerStatusMessage);
-      operativtUppgiftslagerService.onTaskAvslutad(oulAvslutRequest);
+      var oulUpdateRequest = mapper.mapToLogicOulStatusMessage(operativtUppgiftslagerStatusMessage);
+      operativtUppgiftslagerService.onTaskStatusUpdated(oulUpdateRequest);
 
-      log.info("Processed task for Avslut: {}", oulAvslutRequest);
+      log.info("Processed task for StatusUpdate: {}", oulUpdateRequest);
    }
 }

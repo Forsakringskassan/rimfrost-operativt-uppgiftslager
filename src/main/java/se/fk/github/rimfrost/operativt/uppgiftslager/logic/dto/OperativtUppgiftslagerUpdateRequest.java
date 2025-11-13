@@ -9,7 +9,13 @@ import se.fk.github.rimfrost.operativt.uppgiftslager.logic.enums.UppgiftStatus;
 @Value.Immutable
 public interface OperativtUppgiftslagerUpdateRequest
 {
-   UUID processId();
+   UUID uppgiftId();
+
+   String processId();
+
+   String personnummer();
+
+   String resultat();
 
    UppgiftStatus status();
 }
