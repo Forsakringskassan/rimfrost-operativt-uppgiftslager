@@ -31,7 +31,7 @@ public class OperativtUppgiftslagerService
    private final ConcurrentHashMap<UUID, RequestMetadataEntity> metadataMap = new ConcurrentHashMap<>();
    private AtomicLong idCounter = new AtomicLong();
 
-   public void addOperativeTask(OperativtUppgiftslagerAddRequest addRequest,
+   public String addOperativeTask(OperativtUppgiftslagerAddRequest addRequest,
          OperativtUppgiftslagerRequestMetadata requestMetadata)
    {
       log.info("Adding new task");
@@ -64,6 +64,7 @@ public class OperativtUppgiftslagerService
       metadataMap.put(uppgift.processId(), metadata);
       notifyTaskUpdate(uppgift);
       log.info("Added new task");
+      return uppgift.uppgiftId().toString();
    }
 
    public Collection<UppgiftEntity> getUppgifter()

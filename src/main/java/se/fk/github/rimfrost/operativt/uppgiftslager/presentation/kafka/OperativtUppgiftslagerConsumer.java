@@ -11,6 +11,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import io.smallrye.common.annotation.Blocking;
+import se.fk.rimfrost.OperativtUppgiftslagerResponseMessagePayload;
 
 @ApplicationScoped
 public class OperativtUppgiftslagerConsumer
@@ -25,14 +26,18 @@ public class OperativtUppgiftslagerConsumer
 
    @Incoming("operativt-uppgiftslager-requests")
    @Blocking
-   public void onOperativtUppgiftsLagerRequest(OperativtUppgiftslagerRequestMessagePayload operativtUppgiftslagerRequest)
+   public OperativtUppgiftslagerResponseMessagePayload onOperativtUppgiftsLagerRequest(OperativtUppgiftslagerRequestMessagePayload operativtUppgiftslagerRequest)
    {
       log.info("Received task for operativt uppgiftslager: {}", operativtUppgiftslagerRequest);
 
       var oulAddRequest = mapper.mapToLogicOulAddRequest(operativtUppgiftslagerRequest.getData());
       var oulAddRequestMetadata = mapper.mapToLogicOulAddRequestMetadata(operativtUppgiftslagerRequest);
 
-      operativtUppgiftslagerService.addOperativeTask(oulAddRequest, oulAddRequestMetadata);
+      var id = operativtUppgiftslagerService.addOperativeTask(oulAddRequest, oulAddRequestMetadata);
       log.info("Processed task for operativt uppgiftslager: {}", operativtUppgiftslagerRequest);
+
+      var response = new  OperativtUppgiftslagerResponseMessagePayload();
+      response.getData().setUppgiftId(id);
+      return response;
    }
 }
