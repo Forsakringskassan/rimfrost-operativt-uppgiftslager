@@ -3,6 +3,7 @@ package se.fk.github.rimfrost.operativt.uppgiftslager.logic;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicLong;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import jakarta.enterprise.context.ApplicationScoped;
@@ -10,6 +11,7 @@ import jakarta.inject.Inject;
 import se.fk.github.rimfrost.operativt.uppgiftslager.integration.kafka.OperativtUppgiftslagerProducer;
 import se.fk.github.rimfrost.operativt.uppgiftslager.logic.dto.OperativtUppgiftslagerAddRequest;
 import se.fk.github.rimfrost.operativt.uppgiftslager.logic.dto.OperativtUppgiftslagerRequestMetadata;
+import se.fk.github.rimfrost.operativt.uppgiftslager.logic.dto.OperativtUppgiftslagerUpdateRequest;
 import se.fk.github.rimfrost.operativt.uppgiftslager.logic.entity.ImmutableUppgiftEntity;
 import se.fk.github.rimfrost.operativt.uppgiftslager.logic.entity.UppgiftEntity;
 import se.fk.github.rimfrost.operativt.uppgiftslager.logic.entity.RequestMetadataEntity;
@@ -31,7 +33,7 @@ public class OperativtUppgiftslagerService
    private final ConcurrentHashMap<UUID, RequestMetadataEntity> metadataMap = new ConcurrentHashMap<>();
    private AtomicLong idCounter = new AtomicLong();
 
-   public void addOperativeTask(OperativtUppgiftslagerAddRequest addRequest,
+   public String addOperativeTask(OperativtUppgiftslagerAddRequest addRequest,
          OperativtUppgiftslagerRequestMetadata requestMetadata)
    {
       log.info("Adding new task");
@@ -64,6 +66,7 @@ public class OperativtUppgiftslagerService
       metadataMap.put(uppgift.processId(), metadata);
       notifyTaskUpdate(uppgift);
       log.info("Added new task");
+      return uppgift.uppgiftId().toString();
    }
 
    public Collection<UppgiftEntity> getUppgifter()
@@ -154,5 +157,19 @@ public class OperativtUppgiftslagerService
       }
       log.info("Failed to assign new task to handlaggarId: {}", handlaggarId);
       return null;
+   }
+
+   public void onTaskStatusUpdated(OperativtUppgiftslagerUpdateRequest request)
+   {
+      log.info("StatusUpdating task {}", request.uppgiftId());
+      var task = taskMap.get(Long.parseLong(request.uppgiftId().toString()));
+      var updatedTask = ImmutableUppgiftEntity.builder()
+            .from(task)
+            .status(request.status())
+            .build();
+      taskMap.put(task.uppgiftId(), updatedTask);
+      var responsePayload = logicMapper.toOperativtUppgiftslagerStatusMessagePayload(updatedTask);
+      producer.publishTaskStatusUpdate(responsePayload);
+      log.info("Task StatusUpdate finished on {}", updatedTask.uppgiftId());
    }
 }
